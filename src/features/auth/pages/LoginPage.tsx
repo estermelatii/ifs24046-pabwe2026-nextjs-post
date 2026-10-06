@@ -42,7 +42,7 @@ function LoginPage() {
     }
   }, [isProfile, dispatch]);
 
-  async function onSubmitHandler(event) {
+  async function onSubmitHandler(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     try {
