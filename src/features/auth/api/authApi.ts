@@ -4,11 +4,11 @@ import { DELCOM_BASEURL } from "@/lib/config";
 const authApi = (() => {
   const BASE_URL = `${DELCOM_BASEURL}/auth`;
 
-  function _url(path) {
+  function _url(path: string) {
     return BASE_URL + path;
   }
 
-  async function postRegister(name, email, password) {
+  async function postRegister(name: string, email: string, password: string) {
     const response = await apiHelper.fetchData(_url("/register"), {
       method: "POST",
       headers: {
@@ -23,18 +23,13 @@ const authApi = (() => {
 
     const result = await response.json();
     if (result.status !== "success" && !result.success) {
-      const errorDetails =
-        result.data && typeof result.data === "object"
-          ? Object.values(result.data).flat().join(", ")
-          : "";
-      const baseMsg = result.message || "Gagal melakukan pendaftaran";
-      throw new Error(errorDetails ? `${baseMsg}: ${errorDetails}` : baseMsg);
+      throw new Error(result.message || "Gagal registrasi");
     }
 
     return result.message;
   }
 
-  async function postLogin(email, password) {
+  async function postLogin(email: string, password: string) {
     const response = await apiHelper.fetchData(_url("/login"), {
       method: "POST",
       headers: {
@@ -54,26 +49,9 @@ const authApi = (() => {
     return result.data;
   }
 
-  async function postLogout() {
-    const response = await apiHelper.fetchData(_url("/logout"), {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const result = await response.json();
-    if (result.status !== "success" && !result.success) {
-      throw new Error(result.message || "Gagal logout");
-    }
-
-    return result.message;
-  }
-
   return {
     postRegister,
     postLogin,
-    postLogout,
   };
 })();
 
